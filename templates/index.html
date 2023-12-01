@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <!--<link rel="stylesheet" href="static/css/style.css">-->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <title>Phân Loại Giày</title>
+</head>
+
+<body>
+    <script>
+        // Kiểm tra trạng thái image_uploaded khi trang được load
+        $(document).ready(function() {
+            checkImageUploaded();
+        });
+
+        // Hàm kiểm tra và cập nhật trạng thái image_uploaded
+        function checkImageUploaded() {
+            $.ajax({
+                url: '/check_image_uploaded',
+                type: 'GET',
+                success: function(data) {
+                    if (data.image_uploaded) {
+                        // Nếu ảnh đã được tải lên, cập nhật giao diện
+                        $('#centerBox').html('<img src="{{ url_for("static", filename="output/origin_image.png") }}" alt="Uploaded Image">');
+                        $('#chooseText').text('Ảnh đã được tải lên!');
+                    }
+                }
+            });
+        }
+    </script>
+    <div class="container">
+        <div class="center-box">
+            <form method="post" action="/predict" enctype="multipart/form-data">
+                <div class="file-input">
+                    <label for="file-upload" class="file-label">
+                        <div class="upload-button">
+                            <div class="red-square">
+                                {% if image_uploaded %}
+                                    <span class="choose-text">Ảnh đã được tải lên!</span>
+                                {% else %}
+                                    <span class="choose-text">Chọn ảnh từ thiết bị</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </label>
+                    <input id="file-upload" value="Chọn tập tin" name='data' type='file' accept="image/*">
+                </div>
+                <input type="submit" value="Submit" class="submit-button">
+            </form>
+        </div>
+    </div>
+</body>
+
+
+</html>
